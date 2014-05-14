@@ -1,7 +1,7 @@
 
 # migrate
 
-  Abstract migration framework for node
+  Abstract migration framework for node. Uses mongo (`MONGO_URL`) to store migrations instead of filesystem.
 
 ## Installation
 
