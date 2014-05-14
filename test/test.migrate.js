@@ -9,12 +9,6 @@ var migrate = require('../')
 
 // remove migration file
 
-try {
-  fs.unlinkSync(__dirname + '/.migrate');
-} catch (err) {
-  // ignore
-}
-
 // dummy db
 
 var db = { pets: [] };
@@ -22,6 +16,8 @@ var db = { pets: [] };
 // dummy migrations
 
 migrate(__dirname + '/.migrate');
+
+migrate.set.del();
 
 migrate('add guy ferrets', function(next){
   db.pets.push({ name: 'tobi' });
@@ -131,7 +127,6 @@ function testMigrationEvents() {
 
   set.on('migration', function(migration, direction){
     migrations.push(migration.title);
-    direction.should.be.a('string');
   });
 
   set.on('complete', function(){
@@ -167,12 +162,29 @@ function testNamedMigrations() {
           assertSecondMigration();
           set.down(function() {
             set.pos.should.equal(1);
+            testChug();
           }, 'add girl ferrets');
         },'add girl ferrets');
       }, 'add girl ferrets');
     },'add girl ferrets');
   }, 'add guy ferrets');
 }
+
+function testChug() {
+  migrate('check chug', function(chug, next) {
+    chug.should.have.property('src');
+    finished();
+  }, function(next) {
+    next();
+  });
+  set.up(function() {
+    finished();
+  })
+}
+
+function finished() {
+  migrate.db.close();
+};
 
 // helpers
 
@@ -209,6 +221,8 @@ assertPets.withDogs = function(){
   db.pets[0].email.should.equal('tobi@learnboost.com');
   db.pets[4].name.should.equal('suki');
 };
+
+console.log('test migrate');
 
 // status
 
