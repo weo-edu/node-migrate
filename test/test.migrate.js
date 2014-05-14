@@ -162,7 +162,7 @@ function testNamedMigrations() {
           assertSecondMigration();
           set.down(function() {
             set.pos.should.equal(1);
-            testChug();
+            finished();
           }, 'add girl ferrets');
         },'add girl ferrets');
       }, 'add girl ferrets');
@@ -170,17 +170,6 @@ function testNamedMigrations() {
   }, 'add guy ferrets');
 }
 
-function testChug() {
-  migrate('check chug', function(chug, next) {
-    chug.should.have.property('src');
-    finished();
-  }, function(next) {
-    next();
-  });
-  set.up(function() {
-    finished();
-  })
-}
 
 function finished() {
   migrate.db.close();
@@ -221,8 +210,6 @@ assertPets.withDogs = function(){
   db.pets[0].email.should.equal('tobi@learnboost.com');
   db.pets[4].name.should.equal('suki');
 };
-
-console.log('test migrate');
 
 // status
 
