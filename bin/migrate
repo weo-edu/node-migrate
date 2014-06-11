@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var migrate = require('../')
+var migrate = require('../')(process.env.MONGO_URL)
   , join = require('path').join
   , fs = require('fs');
 
@@ -172,7 +172,7 @@ var commands = {
 
     var curr = pad((migrations.pop() || 0) + 1)
       , title = slugify([].slice.call(arguments).join(' '));
-    title = title ? curr + '-' + title : curr; 
+    title = title ? curr + '-' + title : curr;
     create(title);
     migrate.db.close();
   }
@@ -228,7 +228,7 @@ function performMigration(direction, migrationName) {
   var migrationPath = migrationName
     ? join('migrations', migrationName)
     : migrationName;
- 
+
   set[direction](null, migrationPath);
 }
 
